@@ -1,3 +1,3 @@
-﻿base64.obj : error LNK2005: "class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl base64_decode(class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > const &)" (?base64_decode@@YA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@ABV12@@Z) already defined in Source.obj
-base64.obj : error LNK2005: "class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl base64_encode(class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > const &)" (?base64_encode@@YA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@ABV12@@Z) already defined in Source.obj
-C:\Users\Stacy\Documents\Visual Studio 2015\Projects\cryptohash\Debug\cryptohash.exe : fatal error LNK1169: one or more multiply defined symbols found
+﻿  Source.cpp
+  cryptohash.vcxproj -> C:\Users\Stacy\Documents\Visual Studio 2015\Projects\cryptohash\Debug\cryptohash.exe
+  cryptohash.vcxproj -> C:\Users\Stacy\Documents\Visual Studio 2015\Projects\cryptohash\Debug\cryptohash.pdb (Full PDB)
