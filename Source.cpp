@@ -4,11 +4,13 @@
 #include <sstream>
 #include <openssl/sha.h>
 #include <conio.h>
+#include <iomanip>
 #include "cpprest/http_client.h"
 #include "cpprest/containerstream.h"
 #include "cpprest/filestream.h"
+#include <bitset>
 
-
+#include "base64.cpp"
 
 
 #ifdef _WIN32
@@ -24,13 +26,8 @@ std::string SHA256hash(std::string);
 std::string SHA384hash(std::string);
 std::string SHA512hash(std::string);
 
-std::string to_hex(unsigned char s) {
-	std::stringstream ss;
-	ss << std::hex << (int)s;
-	return ss.str();
-}
 
-const char base64_url_alphabet[] = {
+const char base64_url_alphabet1[] = {
 
 	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
 
@@ -46,19 +43,19 @@ const char base64_url_alphabet[] = {
 
 
 
-std::string base64_encoder(unsigned char in) {
+std::string base64_encoder1(const std::string & in) {
 
 	std::string out;
 
 	int val = 0, valb = -6;
 
-	//size_t len = in.length();
+	size_t len = in.length();
 
-	//unsigned int i = 0;
+	unsigned int i = 0;
 
-	//for (i = 0; i < len; i++) {
+	for (i = 0; i < len; i++) {
 
-		unsigned char c = in;
+		unsigned char c = in[i];
 
 		val = (val << 8) + c;
 
@@ -66,23 +63,26 @@ std::string base64_encoder(unsigned char in) {
 
 		while (valb >= 0) {
 
-			out.push_back(base64_url_alphabet[(val >> valb) & 0x3F]);
+			out.push_back(base64_url_alphabet1[(val >> valb) & 0x3F]);
 
 			valb -= 6;
 
 		}
 
-//	}
+	}
 
 	if (valb > -6) {
 
-		out.push_back(base64_url_alphabet[((val << 8) >> (valb + 8)) & 0x3F]);
+		out.push_back(base64_url_alphabet1[((val << 8) >> (valb + 8)) & 0x3F]);
 
 	}
 
 	return out;
 
 }
+
+
+
 
 
 #ifdef _WIN32
@@ -92,19 +92,19 @@ int main(int argc, char* argv[])
 #endif
 {
 	std::string type = "RS512";
-	std::string string1 = "hello world";
+	std::string string1 = "A Modern Security Solution For Modern Security Threats. Start Your Free Trial";
 
 
 //	if (type == "RS256" || type =="ES256") {
-		std::wcout << "512" <<  SHA256hash(string1).c_str() << std::endl;
+		std::wcout << "256	" <<  SHA256hash(string1).c_str() << std::endl;
 		std::wcout << SHA256hash(string1).length() << std::endl;
 //	}
 //	else if (type == "RS384" || type =="ES384") {
-		std::wcout << "384" << SHA384hash(string1).c_str() << std::endl;
+		std::wcout << "384	" << SHA384hash(string1).c_str() << std::endl;
 		std::wcout << SHA384hash(string1).length() << std::endl;
 //	}
 //else if (type == "RS512" || type == "ES512") {
-		std::wcout << "512" << SHA512hash(string1).c_str() << std::endl;
+		std::wcout << "512	" << SHA512hash(string1).c_str() << std::endl;
 		std::wcout << SHA512hash(string1).length() << std::endl;
 //}
 //	else
@@ -123,12 +123,19 @@ std::string SHA256hash(std::string line) {
 	SHA256_Update(&sha256, line.c_str(), line.length());
 	SHA256_Final(hash, &sha256);
 
-	std::string output ="";
-
-	for (int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
-		output += base64_encoder(output[i]);
+	std::stringstream ss;
+	std::string output = "";
+	for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
+	{
+		ss << std::hex<< hash[i];
 	}
-	return output;
+
+	output = base64_encoder1(ss.str());
+	
+
+	std::cout << output << std::endl;
+	return ss.str();
+	
 
 }
 
@@ -140,14 +147,21 @@ std::string SHA384hash(std::string line) {
 	SHA384_Init(&sha384);
 	SHA384_Update(&sha384, line.c_str(), line.length());
 	SHA384_Final(hash, &sha384);
+	std::wcout << "384 hash	" << &sha384 << std::endl;
 
-	std::string output ="";
-	//output = base64_encoder(hash);
-	for (int i = 0; i < SHA384_DIGEST_LENGTH; i++) {
-		output += base64_encoder(hash[i]);
-		
+	std::string output = "";
+	std::stringstream ss;
+	for (int i = 0; i < SHA384_DIGEST_LENGTH; i++)
+	{
+		ss << std::bitset<8>(hash[i]);
 	}
-	return output;
+
+	output = base64_encoder1(ss.str());
+
+
+	std::cout << output << std::endl;
+	return ss.str();
+
 
 }
 
@@ -158,11 +172,19 @@ std::string SHA512hash(std::string line) {
 	SHA512_Init(&sha512);
 	SHA512_Update(&sha512, line.c_str(), line.length());
 	SHA512_Final(hash, &sha512);
+	std::wcout << "512 hash	" <<  &sha512 << std::endl;
 
-	std::string output ="";
-	for (int i = 0; i < SHA512_DIGEST_LENGTH; i++) {
-		output += base64_encoder(hash[i]);
+	std::string output = "";
+	std::stringstream ss;
+	for (int i = 0; i < SHA512_DIGEST_LENGTH; i++)
+	{
+		ss << hash[i];
 	}
-	return output;
+
+	output = base64_encoder1(ss.str());
+
+
+	std::cout << output << std::endl;
+	return ss.str();
 
 }
